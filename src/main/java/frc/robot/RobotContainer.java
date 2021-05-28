@@ -4,11 +4,16 @@
 
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.DriveTrainCommand;
-import frc.robot.subsystems.DriveTrainSubsystem;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import frc.robot.commands.DrivetrainCommand;
+import frc.robot.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -19,9 +24,9 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveTrainSubsystem m_DriveTrainSubsystem;
+  private final DrivetrainSubsystem m_drivetrainSubsystem;
 
-  private final DriveTrainCommand m_autoCommand;
+  private final DrivetrainCommand m_drivetrainCommand;
 
   private final SpeedControllerGroup m_leftMotors, m_rightMotors;
 
@@ -29,11 +34,17 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    m_xboxController = new XboxController(0);
-    
-    m_DriveTrainSubsystem = new DriveTrainSubsystem(m_leftMotors, m_rightMotors);
+    m_rightMotors = new SpeedControllerGroup(new WPI_TalonSRX(Constants.BOTTOM_RIGHT_DRIVE_PORT), new WPI_TalonSRX(Constants.TOP_RIGHT_DRIVE_PORT));
+    m_leftMotors = new SpeedControllerGroup(new WPI_TalonSRX(Constants.BOTTOM_LEFT_DRIVE_PORT), new WPI_TalonSRX(Constants.TOP_LEFT_DRIVE_PORT));
 
-    m_autoCommand = new DriveTrainCommand(m_DriveTrainSubsystem);
+    m_xboxController = new XboxController(0);
+    DoubleSupplier xSpeedSupplier = () -> m_xboxController.getY(Hand.kLeft);
+    DoubleSupplier xRotationSpeed = () -> m_xboxController.getX(Hand.kRight);
+
+    m_drivetrainSubsystem = new DrivetrainSubsystem(m_leftMotors, m_rightMotors);
+    m_drivetrainCommand = new DrivetrainCommand(m_drivetrainSubsystem, xSpeedSupplier, xRotationSpeed);
+
+    m_drivetrainSubsystem.setDefaultCommand(m_drivetrainCommand);
 
 
 
@@ -55,7 +66,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An DriveTrainCommand will run in autonomous
-    return m_autoCommand;
+    // An DrivetrainCommand will run in autonomous
+    return null;
   }
 }

@@ -4,19 +4,18 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class DriveTrainSubsystem extends SubsystemBase {
+public class DrivetrainSubsystem extends SubsystemBase {
   private DifferentialDrive m_differentialDrive;
   private double m_xSpeed;
   private double m_rotationSpeed; 
   
   /** Creates a new ExampleSubsystem. */
-  public DriveTrainSubsystem(SpeedControllerGroup leftMotors, SpeedControllerGroup rightMotors) {
-    m_differentialDrive = new DifferentialDrive(leftMotor, rightMotor);
+  public DrivetrainSubsystem(SpeedControllerGroup leftMotors, SpeedControllerGroup rightMotors) {
+    m_differentialDrive = new DifferentialDrive(leftMotors, rightMotors);
     
   }
   
